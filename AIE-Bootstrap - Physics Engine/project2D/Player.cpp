@@ -178,7 +178,6 @@ void Player::FixedUpdate(glm::vec2 gravity, float dt)
 	}
 
 	m_currentEnergy = glm::clamp(m_currentEnergy, 0.0f, m_maxEnergy);
-	m_currentHealth = glm::clamp(m_currentHealth, 0, m_maxHealth);
 }
 
 void Player::SafeToRemove()
@@ -189,11 +188,15 @@ void Player::SafeToRemove()
 void Player::TakeDamage(int damage)
 {
 	m_currentHealth -= damage;
+
+	m_currentHealth = glm::clamp(m_currentHealth, 0, m_maxHealth);
 }
 
 void Player::IncreaseScore(int increase)
 {
 	m_currentScore += increase;
+
+	m_currentScore = glm::clamp(m_currentScore, 0, 1000000);
 
 	if (m_currentHealth <= 0)
 	{
@@ -204,4 +207,6 @@ void Player::IncreaseScore(int increase)
 void Player::GainEnergy(float energyGained)
 {
 	m_currentEnergy += energyGained;
+
+	m_currentEnergy = glm::clamp(m_currentEnergy, 0.0f, m_maxEnergy);
 }

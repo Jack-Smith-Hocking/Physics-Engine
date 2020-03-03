@@ -62,6 +62,19 @@ bool Application2D::startup()
 
 void Application2D::shutdown() 
 {
+	if (m_menu != nullptr)
+	{
+		delete m_menu;
+	}
+	if (m_levelManager != nullptr)
+	{
+		delete m_levelManager;
+	}
+	if (m_physicsScene != nullptr)
+	{
+		delete m_physicsScene;
+	}
+
 	delete m_font;
 	delete m_texture;
 	delete m_shipTexture;
@@ -135,10 +148,11 @@ void Application2D::draw()
 	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, -100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 
 	// output some text, uses the last used colour
-	char fps[32];
-	sprintf_s(fps, 32, "FPS: %i", getFPS());
-	m_2dRenderer->drawText(m_font, fps, 0, getWindowHeight() - 32);
-	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, getWindowHeight() - 64);
+	//char fps[32];
+	//sprintf_s(fps, 32, "FPS: %i", getFPS());
+	//m_2dRenderer->drawText(m_font, fps, 0, getWindowHeight() - 32);
+	
+	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, getWindowHeight() - 32);
 
 	if (m_player != nullptr && m_menu->m_currentGameState == GameState::GAME)
 	{
@@ -162,14 +176,14 @@ void Application2D::draw()
 
 		m_2dRenderer->drawText(m_font, score.c_str(), (float)getWindowWidth() - m_font->getStringWidth(score.c_str()) - xOffset, (float)getWindowHeight() - 40);
 
-		m_2dRenderer->drawText(m_font, "Press 'R' to restart!", 0, getWindowHeight() - 94);
+		m_2dRenderer->drawText(m_font, "Press 'R' to restart!", 0, getWindowHeight() - 64);
 
 		//m_player->DrawLine(m_2dRenderer);
 	}
 	else if (m_menu->m_currentGameState == GameState::MENU)
 	{
 		std::stringstream s;
-		s << "Total Score: " <<m_menu->m_currentScore;
+		s << "Total Score: " << m_menu->m_currentScore;
 		std::string score = s.str();
 
 		m_2dRenderer->drawText(m_font, score.c_str(), (float)getWindowWidth() / 2 - 100, (float)getWindowHeight() - 50);
@@ -194,19 +208,15 @@ void Application2D::InitialiseGame()
 	m_player->SetLinearDrag(0.25f);
 
 	m_menu->UpdatePlayer(m_player);
-
-	CollectibleCircle* c = new CollectibleCircle(glm::vec2(-50, 0), glm::vec2(0, 0), 1, 2, glm::vec4(1, 0, 0, 1));
-	c->CollectibleValues(CollectibleType::NORMAL, 100, 100);
-	c->SetKinematic(true);
-
-	m_physicsScene->AddActor(c);
 	m_physicsScene->AddActor(m_player);
 
 	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::NORMAL, 300, 1, 0, 10, 10, glm::vec4(1, 1, 0, 1)));
-	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::DANGEROUS, 150, 1.5f, 1, 20, -5, glm::vec4(1, 0.75f, 0, 1)));
-	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::NORMAL, 75, 1.5f, 0, 35, 15, glm::vec4(1, 0, 0, 1)));
+	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::NORMAL, 75, 1.5f, 0, 35, 15, glm::vec4(0, 1, 0, 1)));
+
 	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::DANGEROUS, 50, 0.75f, -1, 10, 10, glm::vec4(1, 1, 1, 1)));
-	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::DANGEROUS, 450, 1.5f, 10, 2, -25, glm::vec4(0, 1, 0, 1)));
+	
+	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::DANGEROUS, 450, 1.5f, 10, 2, -25, glm::vec4(1, 0, 0, 1)));
+	m_levelManager->AddBallData(new LevelManage::BallData(CollectibleType::DANGEROUS, -50, 1.5f, 1, 20, -5, glm::vec4(1, 0, 1, 1)));
 
 	m_levelManager->SortBallData();
 	m_levelManager->SpawnRandom(m_levelManager->GetMaxSpawns());
