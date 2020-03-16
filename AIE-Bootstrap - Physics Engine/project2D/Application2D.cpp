@@ -95,15 +95,13 @@ void Application2D::update(float deltaTime)
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 
-	if (input->isKeyDown(aie::INPUT_KEY_R) && m_menu->m_currentGameState == GameState::GAME)
+	if (input->isKeyDown(aie::INPUT_KEY_R) && m_menu->m_currentGameState == GameState::GAME) // Check if 'R' was pressed and the game is playing
 	{
-		m_menu->m_currentGameState = GameState::MENU;
-		m_menu->m_currentScore += m_player->GetCurrentScore();
+		m_menu->m_currentGameState = GameState::MENU; // Bring up the menu
+		m_menu->m_currentScore += m_player->GetCurrentScore(); // Add this round's score to the total score
 	}
 
-	//aie::Gizmos::clear();
-
-	GameState gs = m_menu->m_currentGameState;
+	GameState gs = m_menu->m_currentGameState; // Get the current state of the game
 
 	switch (gs)
 	{
@@ -119,7 +117,7 @@ void Application2D::update(float deltaTime)
 		break;
 	}
 
-	if (m_player->m_destroyObject && m_menu->m_currentGameState != GameState::MENU && m_menu->m_currentGameState != GameState::TUTORIAL)
+	if (m_player->m_destroyObject && m_menu->m_currentGameState != GameState::MENU && m_menu->m_currentGameState != GameState::TUTORIAL) // Check if the player has died, and resets to main menu
 	{
 		m_menu->m_currentGameState = GameState::MENU;
 		m_menu->m_currentScore += m_player->GetCurrentScore();
@@ -139,7 +137,7 @@ void Application2D::draw()
 		aie::Texture* tut = m_menu->GetTutorialTexture();
 		if (tut != nullptr)
 		{
-			m_2dRenderer->drawSprite(tut, getWindowWidth() / 2, getWindowHeight() / 2, tut->getWidth(), tut->getHeight());
+			m_2dRenderer->drawSprite(tut, (float)getWindowWidth() / 2, (float)getWindowHeight() / 2, (float)tut->getWidth(), (float)tut->getHeight());
 			m_menu->UpdateMenu();
 		}
 	}
@@ -147,38 +145,20 @@ void Application2D::draw()
 	static float aspectRatio = 16 / 9.0f;
 	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, -100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 
-	// output some text, uses the last used colour
-	//char fps[32];
-	//sprintf_s(fps, 32, "FPS: %i", getFPS());
-	//m_2dRenderer->drawText(m_font, fps, 0, getWindowHeight() - 32);
-	
-	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, getWindowHeight() - 32);
+	m_2dRenderer->drawText(m_font, "Press ESC to quit!", 0, (float)getWindowHeight() - 32);
 
-	if (m_player != nullptr && m_menu->m_currentGameState == GameState::GAME)
+	if (m_player != nullptr && m_menu->m_currentGameState == GameState::GAME && m_font != nullptr)
 	{
 		float xOffset = 20;
 
-		//std::stringstream h;
-		//h << "Health: " << m_player->GetCurrentHealth() << " / " << m_player->GetMaxHealth();
-		//std::string health = h.str();
-
-		//m_2dRenderer->drawText(m_font, health.c_str(), (float)getWindowWidth() - m_font->getStringWidth(health.c_str()) - xOffset, (float)getWindowHeight() - 50);
-
-		//std::stringstream e;
-		//e << "Energy: " << (int)m_player->GetCurrentEnergy() << " / " << (int)m_player->GetMaxEnergy();
-		//std::string energy = e.str();
-
-		//m_2dRenderer->drawText(m_font, energy.c_str(), (float)getWindowWidth() - m_font->getStringWidth(energy.c_str()) - xOffset, (float)getWindowHeight() - 75);
-
+		// Print the player's score
 		std::stringstream s;
 		s << "Score: " << m_player->GetCurrentScore();
 		std::string score = s.str();
 
 		m_2dRenderer->drawText(m_font, score.c_str(), (float)getWindowWidth() - m_font->getStringWidth(score.c_str()) - xOffset, (float)getWindowHeight() - 40);
 
-		m_2dRenderer->drawText(m_font, "Press 'R' to restart!", 0, getWindowHeight() - 64);
-
-		//m_player->DrawLine(m_2dRenderer);
+		m_2dRenderer->drawText(m_font, "Press 'R' to restart!", 0, (float)getWindowHeight() - 64);
 	}
 	else if (m_menu->m_currentGameState == GameState::MENU)
 	{

@@ -5,7 +5,6 @@
 CollectibleCircle::CollectibleCircle(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour, CollectibleCircle* springHolder) : Circle(position, velocity, mass, radius, colour)
 {
 	CollectibleValues(CollectibleType::NORMAL, 100, 0);
-	//SetKinematic(true);
 	m_destroyObject = false;
 }
 
@@ -38,6 +37,7 @@ void CollectibleCircle::MakeGizmo()
 		break;
 
 	case DANGEROUS:
+		// Draw spikes on dangerous items that deal more than 0 damage (in other words, ones that don't heal)
 		if (m_damage > 0)
 		{
 			// Vertical //
@@ -79,7 +79,7 @@ void CollectibleCircle::FixedUpdate(glm::vec2 gravity, float dt)
 {
 	Circle::FixedUpdate(gravity, dt);
 
-	if (m_spring != nullptr && m_spring->m_destroyObject)
+	if (m_spring != nullptr && m_spring->m_destroyObject) // Destroy the spring if this item is set to be destroyed 
 	{
 		m_spring = nullptr;
 	}
@@ -97,7 +97,7 @@ void CollectibleCircle::ResolveCollision(RigidBody* actor2, glm::vec2 contact, g
 
 	Player* p = dynamic_cast<Player*>(actor2);
 
-	if (p != nullptr)
+	if (p != nullptr) // Affect the player accordingly based on the type of item this is
 	{
 		switch (m_type)
 		{

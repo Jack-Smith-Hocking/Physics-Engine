@@ -22,8 +22,8 @@ void Spring::FixedUpdate(glm::vec2 gravity, float timeStep)
 
 		//force = glm::clamp(force, 0.0f, m_maxForce);
 
-		m_body1->ApplyForce(-force * timeStep, p1 - m_body1->GetPosition());
-		m_body2->ApplyForce(force * timeStep, p2 - m_body2->GetPosition());
+		m_body1->ApplyForce(-force * timeStep, p1 - m_body1->GetPosition()); // Apply force to keep bodies together 
+		m_body2->ApplyForce(force * timeStep, p2 - m_body2->GetPosition()); // Apply force to kepp bodies together 
 	}
 }
 

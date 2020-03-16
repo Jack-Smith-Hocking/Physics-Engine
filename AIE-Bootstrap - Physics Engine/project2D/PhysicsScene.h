@@ -19,6 +19,8 @@ public :
 	void UpdateGizmo();
 
 	void DebugScene();
+	
+	// Remove all null objects from a list of PhysicsObjects, used for safely deleting objects in the scene
 	static void RemoveNullElements(std::vector<PhysicsObject*>& objs);
 
 	void SetGravity(const glm::vec2 gravity);
@@ -29,8 +31,10 @@ public :
 
 	int GetActorsCount();
 
+	// Applies a seperating force to colliding objects
 	static void ApplyContactForces(RigidBody* rb1, RigidBody* rb2, glm::vec2 norm, float pen);
 
+	// Resolves all collision types 
 #pragma region Collisions
 	void CheckCollision();
 

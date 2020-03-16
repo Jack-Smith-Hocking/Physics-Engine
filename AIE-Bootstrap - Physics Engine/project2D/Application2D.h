@@ -20,13 +20,14 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 
+	// Initialise a game map
 	void InitialiseGame();
 
 protected:
-	PhysicsScene* m_physicsScene = nullptr;
-	LevelManage* m_levelManager = nullptr;
-	Player* m_player = nullptr;
-	MenuSystem* m_menu = nullptr;
+	PhysicsScene* m_physicsScene = nullptr; // Physics scene that hold all relevant physics objects
+	LevelManage* m_levelManager = nullptr; // Manages loading in levels and spawning balls
+	Player* m_player = nullptr; // The player
+	MenuSystem* m_menu = nullptr; // Handles GUI in the form of button menus
 
 	aie::Renderer2D*	m_2dRenderer = nullptr;
 	aie::Texture*		m_texture = nullptr;

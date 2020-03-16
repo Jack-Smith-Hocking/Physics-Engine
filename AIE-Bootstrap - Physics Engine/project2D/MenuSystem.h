@@ -12,23 +12,24 @@ enum GameState
 class MenuSystem
 {
 public:
+	// Data for upgrading player skills
 	class UpgradeData
 	{
 	public:
-		int m_healthStartCost = 0;
-		int m_forceStartCost = 0;
-		int m_energyStartCost = 0;
+		int m_healthStartCost = 0; // How much health upgrades will cost to start with
+		int m_forceStartCost = 0; // How much force upgrades will cost to start with
+		int m_energyStartCost = 0; // How much energy upgrades will cost to start with
 
-		int m_healthCost = 0;
-		int m_forceCost = 0;
-		int m_energyCost = 0;
+		int m_healthCost = 0; // Current cost of health upgrades
+		int m_forceCost = 0; // Current cost of force upgrades
+		int m_energyCost = 0; // Current cost of energy upgrades 
 
-		int m_currentHealth = 10;
-		float m_currentForce = 50;
-		float m_currentEnergy = 100;
+		int m_currentHealth = 10; // Current player health
+		float m_currentForce = 50; // Current player force
+		float m_currentEnergy = 100; // Current player energy
 
-		int m_upgradeIncrease = 0;
-		int m_costIncrease = 0;
+		int m_upgradeIncrease = 0; // How much attributes will increasde by with an upgrade 
+		int m_costIncrease = 0; // How much more each upgrade will cost
 
 		UpgradeData(int healthStartCost, int forceStartCost, int energyStartCost, int upgradeIncrease, int costIncrease)
 		{

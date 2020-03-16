@@ -16,8 +16,8 @@ public:
 	glm::vec2 GetExtents();
 
 protected:
-	glm::vec2 m_extents;
+	glm::vec2 m_extents = glm::vec2(0, 0);
 
-	glm::vec4 m_colour;
+	glm::vec4 m_colour = glm::vec4(0, 0, 0, 0);
 };
 

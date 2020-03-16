@@ -30,6 +30,6 @@ public:
 protected:
 	PhysicsObject(ShapeType shapeID);
 
-	ShapeType m_shapeID;
+	ShapeType m_shapeID = ShapeType::AABB;
 };
 

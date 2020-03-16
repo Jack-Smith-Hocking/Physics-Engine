@@ -33,23 +33,23 @@ public:
 	void GainEnergy(float energyGained);
 
 protected:
-	int m_maxHealth = 10;
-	int m_currentHealth = 0;
+	int m_maxHealth = 10; // Player's max health
+	int m_currentHealth = 0; // Player's current health
 
-	float m_maxEnergy = 0;
-	float m_currentEnergy = 0;
-	float m_energyLossPerSecond = 0;
+	float m_maxEnergy = 0; // Player's max energy
+	float m_currentEnergy = 0; // Player's current energy
+	float m_energyLossPerSecond = 0; // How much energy is lost per second
 
 	bool m_startDelay = false;
 	float m_currentDelayTimer = 0;
 
-	float m_maxForce = 10;
+	float m_maxForce = 10; // Player's max force
 
-	int m_currentScore = 0;
+	int m_currentScore = 0; // Player's current score
 
 	aie::Input* m_playerInput = nullptr;
 
-	glm::vec2* m_mouseDownBegin = nullptr;
-	glm::vec2* m_mouseDownEnd = nullptr;
+	glm::vec2* m_mouseDownBegin = nullptr; // Screen position when player first presses down
+	glm::vec2* m_mouseDownEnd = nullptr; // Screen position when player realeases button
 };
 

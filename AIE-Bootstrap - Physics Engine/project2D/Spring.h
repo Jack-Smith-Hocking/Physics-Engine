@@ -18,15 +18,15 @@ public:
 	virtual void SafeToRemove() override;
 
 protected:
-	RigidBody* m_body1 = nullptr;
-	RigidBody* m_body2 = nullptr;
+	RigidBody* m_body1 = nullptr; // Body one connected to the spring
+	RigidBody* m_body2 = nullptr; // Body two connected to the spring 
 
-	glm::vec2 m_contact1 = glm::vec2(0, 0);
-	glm::vec2 m_contact2 = glm::vec2(0, 0);
+	glm::vec2 m_contact1 = glm::vec2(0, 0); // Contact point on body one
+	glm::vec2 m_contact2 = glm::vec2(0, 0); // Contact point on body two
 
 	float m_dampening = 0;
-	float m_restLength = 0;
+	float m_restLength = 0; // How far away the spring will allow the bodies to be 
 	float m_springCoefficient = 0;
-	float m_maxForce;
+	float m_maxForce = 0; // The max force the spring will apply
 };
 

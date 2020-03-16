@@ -49,11 +49,11 @@ void LevelManage::AddWalls()
 
 	float x = 105;
 
-	b = new	class::OBB(glm::vec2(x, 0), glm::vec2(0, 0), 1, 3.145 / 2, glm::vec2(300, 10), glm::vec4(1, 1, 1, 0));
+	b = new	class::OBB(glm::vec2(x, 0), glm::vec2(0, 0), 1, 3.145f / 2, glm::vec2(300, 10), glm::vec4(1, 1, 1, 0));
 	b->SetKinematic(true);
 	m_scene->AddActor(b);
 
-	b = new	class::OBB(glm::vec2(-x, 0), glm::vec2(0, 0), 1, 3.145 / 2, glm::vec2(300, 10), glm::vec4(1, 1, 1, 0));
+	b = new	class::OBB(glm::vec2(-x, 0), glm::vec2(0, 0), 1, 3.145f / 2, glm::vec2(300, 10), glm::vec4(1, 1, 1, 0));
 	b->SetKinematic(true);
 	m_scene->AddActor(b);
 
@@ -78,11 +78,11 @@ bool LevelManage::SpawnRandom(int spawnCount)
 	float w = g_windowDimensions.x;
 	float h = g_windowDimensions.y;
 
-	float randXNeg = rand() % 2;
-	float randYNeg = rand() % 2;
+	float randXNeg = (float)(rand() % 2);
+	float randYNeg = (float)(rand() % 2);
 
-	float randX = (rand() % 20);
-	float randY = (rand() % 20);
+	float randX = (float)(rand() % 20);
+	float randY = (float)(rand() % 20);
 
 	CollectibleCircle* c = nullptr;
 	CollectibleCircle* c2 = nullptr;
@@ -103,38 +103,39 @@ bool LevelManage::SpawnRandom(int spawnCount)
 		Spring* spring = nullptr;
 
 		{
-			randXNeg = rand() % 2;
-			randYNeg = rand() % 2;
+			// Get random numbers for spawning
+			randXNeg = (float)(rand() % 2);
+			randYNeg = (float)(rand() % 2);
 
-			randX = (rand() % 95) * (randXNeg == 1 ? -1 : 1);
-			randY = (rand() % 40) * (randYNeg == 1 ? -1 : 1);
+			randX = (float)(rand() % 95) * (randXNeg == 1 ? -1 : 1);
+			randY = (float)(rand() % 40) * (randYNeg == 1 ? -1 : 1);
 
-			ball = RandomBallData();
+			ball = RandomBallData(); // Get a random ball type
 
 			if (ball == nullptr)
 			{
 				continue;
 			}
 
-			float randHasSpring = rand() % 5;
+			float randHasSpring = (float)(rand() % 5);
 
-			if (ball->m_type == CollectibleType::DANGEROUS && ball->m_damage > 0 && randHasSpring == 0)
+			if (ball->m_type == CollectibleType::DANGEROUS && ball->m_damage > 0 && randHasSpring == 0) // Check if the ball does damage and can have a spring
 			{
-				ball2 = RandomBallData();
+				ball2 = RandomBallData(); // Get a new random ball
 
 				if (ball2 != nullptr)
 				{
-					c2 = new CollectibleCircle(glm::vec2(randX, randY + 5), glm::vec2(0, 0), 1, ball2->m_size, ball2->m_colour);
+					c2 = new CollectibleCircle(glm::vec2(randX, randY + 5), glm::vec2(0, 0), 1, ball2->m_size, ball2->m_colour); // Create a new collectible ball
 					c2->SetKinematic(true);
 
-					float randVNeg = rand() % 2;
+					float randVNeg = (float)(rand() % 2);
 
-					vel = glm::vec2((randVNeg == 0 ? 1 : -1) * (rand() % 25), (randVNeg == 0 ? 1 : -1) * (rand() % 5));
+					vel = glm::vec2((randVNeg == 0 ? 1 : -1) * (rand() % 25), (randVNeg == 0 ? 1 : -1) * (rand() % 5)); // Rand velocity for the second colelctible
 				}
 			}
 		}
 
-		c = new CollectibleCircle(glm::vec2(randX, randY), vel, 1, ball->m_size, ball->m_colour, c2);
+		c = new CollectibleCircle(glm::vec2(randX, randY), vel, 1, ball->m_size, ball->m_colour, c2); // Create a new collectible item
 		c->CollectibleValues(ball->m_type, ball->m_score, ball->m_damage, ball->m_energy, nullptr);
 		if (c2 == nullptr)
 		{
@@ -145,7 +146,7 @@ bool LevelManage::SpawnRandom(int spawnCount)
 				
 		if (c2 != nullptr)
 		{
-			spring = new Spring(c, c2, rand() % 10 + 1, 5, 10000, 0.5f);
+			spring = new Spring(c, c2, (float)(rand() % 10 + 1), 5, 10000, 0.5f); // Create a new spring joiniing the two collectibles
 
 			c->CollectibleValues(ball->m_type, ball->m_score, ball->m_damage, ball->m_energy, spring);
 			c2->CollectibleValues(ball2->m_type, ball2->m_score, ball2->m_damage, ball2->m_energy, spring);
@@ -191,6 +192,8 @@ void LevelManage::AddBallData(BallData* ballData)
 
 LevelManage::BallData* LevelManage::RandomBallData()
 {
+	/// Terrible way of getting random data ///
+
 	int spawnChance = rand() % 100;
 
 	std::vector<BallData*> possibleSpawns;
@@ -230,7 +233,7 @@ void LevelManage::AddFloor()
 
 	for (int i = 0; i < 10; i++)
 	{
-		randFloor = rand() % 2;
+		randFloor = (float)(rand() % 2);
 
 		if (randFloor == 0)
 		{

@@ -1,6 +1,7 @@
 #pragma once
 #include "OBB.h"
 
+// Kills a player that comes into contact with this
 class KillerBox : public OBB
 {
 public:

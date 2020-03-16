@@ -16,7 +16,7 @@ public:
 	void SetRadius(float radius);
 
 protected:
-	glm::vec4 m_colour;
+	glm::vec4 m_colour = glm::vec4(0, 0, 0, 0);
 
-	float m_radius;
+	float m_radius = 0;
 };

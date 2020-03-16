@@ -28,14 +28,14 @@ void MenuSystem::MainMenu()
 	ImGui::Begin("Main Menu");
 	
 	std::string text = "Play Game";
-	if (ImGui::Button(text.c_str(), ImVec2(200, 20)))
+	if (ImGui::Button(text.c_str(), ImVec2(200, 20))) // Button to start the game
 	{
 		m_currentGameState = GameState::GAME;
 		m_app->InitialiseGame();
 	}
 
 	text = "Tutorial";
-	if (ImGui::Button(text.c_str(), ImVec2(200, 20)))
+	if (ImGui::Button(text.c_str(), ImVec2(200, 20))) // Button to show the tutorial screen
 	{
 		m_currentGameState = GameState::TUTORIAL;
 		aie::Gizmos::clear();
@@ -47,37 +47,37 @@ void MenuSystem::MainMenu()
 
 		t << "Upgrade Health: " << m_upgradeData->m_healthCost;
 		text = t.str();
-		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_healthCost)
+		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_healthCost) // Button to upgrade player health
 		{
-			m_currentScore -= m_upgradeData->m_healthCost;
+			m_currentScore -= m_upgradeData->m_healthCost; // Decrease current score
 
-			m_upgradeData->m_currentHealth += m_upgradeData->m_currentHealth * 1 / (100 / m_upgradeData->m_upgradeIncrease);
+			m_upgradeData->m_currentHealth += m_upgradeData->m_currentHealth * 1 / (100 / m_upgradeData->m_upgradeIncrease); // Increase current player health
 
-			m_upgradeData->m_healthCost += (m_upgradeData->m_healthStartCost * ((float)m_upgradeData->m_costIncrease / 100));
+			m_upgradeData->m_healthCost += (int)(m_upgradeData->m_healthStartCost * ((float)m_upgradeData->m_costIncrease / 100)); // Increase the cost of health upgrade
 		}
 
 		t.str("");
 		t << "Upgrade Force: " << m_upgradeData->m_forceCost;
 		text = t.str();
-		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_forceCost)
+		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_forceCost) // Button to upgrade player force
 		{
-			m_currentScore -= m_upgradeData->m_forceCost;
+			m_currentScore -= m_upgradeData->m_forceCost; // Decrease current score
 
-			m_upgradeData->m_currentForce += m_upgradeData->m_currentForce * 1 / (100 / m_upgradeData->m_upgradeIncrease);
+			m_upgradeData->m_currentForce += m_upgradeData->m_currentForce * 1 / (100 / m_upgradeData->m_upgradeIncrease); // Increase current player force
 
-			m_upgradeData->m_forceCost += (m_upgradeData->m_forceStartCost * ((float)m_upgradeData->m_costIncrease / 100));
+			m_upgradeData->m_forceCost += (int)(m_upgradeData->m_forceStartCost * ((float)m_upgradeData->m_costIncrease / 100)); // Increase the cost of force upgrade
 		}
 
 		t.str("");
 		t << "Upgrade Energy: " << m_upgradeData->m_energyCost;
 		text = t.str();
-		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_energyCost)
+		if (ImGui::Button(text.c_str(), ImVec2(200, 20)) && m_currentScore >= m_upgradeData->m_energyCost) // Button to upgrade player energy
 		{
-			m_currentScore -= m_upgradeData->m_energyCost;
+			m_currentScore -= m_upgradeData->m_energyCost; // Decease current score
 
-			m_upgradeData->m_currentEnergy += m_upgradeData->m_currentEnergy * 1 / (100 / m_upgradeData->m_upgradeIncrease);
+			m_upgradeData->m_currentEnergy += m_upgradeData->m_currentEnergy * 1 / (100 / m_upgradeData->m_upgradeIncrease); // Increase current player energy
 
-			m_upgradeData->m_energyCost += (m_upgradeData->m_energyStartCost * ((float)m_upgradeData->m_costIncrease / 100));
+			m_upgradeData->m_energyCost += (int)(m_upgradeData->m_energyStartCost * ((float)m_upgradeData->m_costIncrease / 100)); // Increase the cost of energy upgrade 
 		}
 	}
 

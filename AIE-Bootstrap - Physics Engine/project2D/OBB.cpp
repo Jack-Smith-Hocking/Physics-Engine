@@ -1,5 +1,4 @@
 #include "OBB.h"
-#include "Bird.h"
 
 OBB::OBB(glm::vec2 position, glm::vec2 velocity, float mass, float rotation, glm::vec2 dimensions, glm::vec4 colour) :
 	Box(ShapeType::OBB, position, velocity, mass, rotation, dimensions, colour)
@@ -44,24 +43,6 @@ void OBB::CollisionDetected(RigidBody* collisionBody)
 	if (collisionBody == nullptr)
 	{
 		return;
-	}
-
-	float dist = glm::distance(collisionBody->GetPosition(), GetPosition());
-
-	if (dist > m_sleepBreakDist)
-	{
-		return;
-	}
-
-	Bird* bird = dynamic_cast<Bird*>(collisionBody);
-
-	if (bird != nullptr && this->IsKinematic() == false)
-	{
-		this->m_isAsleep = false;
-	}
-	else if (!collisionBody->m_isAsleep && this->IsKinematic() == false)
-	{
-		this->m_isAsleep = false;
 	}
 }
 

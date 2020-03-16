@@ -16,19 +16,19 @@ RigidBody::~RigidBody()
 
 void RigidBody::FixedUpdate(glm::vec2 gravity, float timeStep)
 {
-	if (m_isKinematic) 
+	if (m_isKinematic) // If the Rigidboy is kinematic exits
 	{
 		m_velocity = glm::vec2(0, 0);
 		m_angularVelocity = 0;
 		return; 
 	}
 
-	m_velocity += gravity * timeStep;
-	m_position += m_velocity * timeStep;
+	m_velocity += gravity * timeStep; // Add gravity to the velocity 
+	m_position += m_velocity * timeStep; // Add the velocity to the rotation
 
-	m_velocity -= m_velocity * m_linearDrag * timeStep;
-	m_rotation += m_angularVelocity * timeStep;
-	m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep;
+	m_velocity -= m_velocity * m_linearDrag * timeStep; // Apply linear drag to the velocity
+	m_rotation += m_angularVelocity * timeStep; // Apply angular velocity to the rotation
+	m_angularVelocity -= m_angularVelocity * m_angularDrag * timeStep; // Apply rotation drag to the rotation of the Rigidbody
 
 	m_angularVelocity = glm::clamp(m_angularVelocity, -m_maxAngularVelocity, m_maxAngularVelocity);
 

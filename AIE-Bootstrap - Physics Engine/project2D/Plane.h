@@ -24,7 +24,7 @@ public:
 	float m_elasticity = 1;
 
 protected:
-	glm::vec2 m_normal;
-	float m_distanceToOrigin;
+	glm::vec2 m_normal = glm::vec2(0, 0);
+	float m_distanceToOrigin = 0;
 };
 

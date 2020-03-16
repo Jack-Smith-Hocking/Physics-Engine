@@ -52,11 +52,11 @@ void PhysicsScene::Update(float dt)
 
 	RemoveNullElements(m_actors);
 
-	while (accumulatedTime >= m_timeStep)
+	while (accumulatedTime >= m_timeStep) // Only update every time step
 	{
 		for (PhysicsObject* pActor : m_actors)
 		{
-			if (pActor != nullptr)
+			if (pActor != nullptr) // Update all PhysicsObjects
 			{
 				pActor->FixedUpdate(m_gravity, m_timeStep);
 			}
@@ -74,7 +74,7 @@ void PhysicsScene::Update(float dt)
 
 void PhysicsScene::UpdateGizmo()
 {
-	for (PhysicsObject* pActor : m_actors)
+	for (PhysicsObject* pActor : m_actors) // Update all PhysicsObject's draw calls
 	{
 		if (pActor != nullptr)
 		{
@@ -96,7 +96,7 @@ void PhysicsScene::RemoveNullElements(std::vector<PhysicsObject*>& objs)
 	PhysicsObject* obj = nullptr;
 	bool keepRemoving = false;
 
-	for (int i = 0; i < objs.size(); i++)
+	for (int i = 0; i < objs.size(); i++) // Iterate through the list and remove null elements 
 	{
 		obj = objs[i];
 
@@ -107,7 +107,7 @@ void PhysicsScene::RemoveNullElements(std::vector<PhysicsObject*>& objs)
 
 			keepRemoving = true;
 
-			obj->SafeToRemove();
+			obj->SafeToRemove(); // Tell the object being removed to 'clean up' essentially
 
 			break;
 		}
@@ -141,7 +141,7 @@ float PhysicsScene::GetTimeStep() const
 
 int PhysicsScene::GetActorsCount()
 {
-	return m_actors.size();
+	return (int)m_actors.size();
 }
 
 void PhysicsScene::ApplyContactForces(RigidBody* rb1, RigidBody* rb2, glm::vec2 norm, float pen)
@@ -189,35 +189,13 @@ void PhysicsScene::CheckCollision()
 				continue;
 			}
 
-			int functionIndex = (shapeID1 * SHAPE_COUNT) + shapeID2;
+			int functionIndex = (shapeID1 * SHAPE_COUNT) + shapeID2; // Get the index for the function pointer array based off of the colliding objects' type
 
 			fn collisionFunc = collisionFunctionArray[functionIndex];
 			
 			if (collisionFunc != nullptr)
 			{
-				/*RigidBody* rb1 = dynamic_cast<RigidBody*>(object1);
-				RigidBody* rb2 = dynamic_cast<RigidBody*>(object2);
-
-				float RKePre = RigidBody::CalcRotKineticEnergy(rb1, rb2);
-				float KePre = RigidBody::CalcKineticEnergy(rb1, rb2);*/
-
 				collisionFunc(object1, object2);
-
-				/*float RKePost = RigidBody::CalcRotKineticEnergy(rb1, rb2);
-				float KePost = RigidBody::CalcKineticEnergy(rb1, rb2);
-
-				float RKeDelta = RKePost - RKePre;
-				float KeDelta = KePost - KePre;
-
-				if (RKeDelta < -0.01f || RKeDelta > 0.01f)
-				{
-					std::cout << "Rotational Energy Change Detected!" << " RKePre: " << RKePre << ", RKePost: " << RKePost << std::endl;
-				}
-				if (KeDelta < -0.01f || KeDelta > 0.01f)
-				{
-					std::cout << "Energy Change Detected!" << " KePre: " << KePre << ", KePost: " << KePost << std::endl;
-					std::cout << std::endl;
-				}*/
 			}
 		}
 	}
@@ -261,10 +239,10 @@ bool PhysicsScene::circle2Circle(PhysicsObject* c1, PhysicsObject* c2)
 
 	if (circle1 != nullptr && circle2 != nullptr)
 	{
-		glm::vec2 delta = circle2->GetPosition() - circle1->GetPosition();
+		glm::vec2 delta = circle2->GetPosition() - circle1->GetPosition(); // Get relative position
 
-		float dist = glm::distance(circle1->GetPosition(), circle2->GetPosition());
-		bool collided = dist <= (circle1->GetRadius() + circle2->GetRadius());
+		float dist = glm::distance(circle1->GetPosition(), circle2->GetPosition()); // Get distance between their centres
+		bool collided = dist <= (circle1->GetRadius() + circle2->GetRadius()); // Check if the sum of their radii are less than the distance between them
 
 		if (collided)
 		{
@@ -272,8 +250,8 @@ bool PhysicsScene::circle2Circle(PhysicsObject* c1, PhysicsObject* c2)
 
 			glm::vec2 contactForce = (dist - (circle1->GetRadius() + circle2->GetRadius())) * delta / dist;
 
-			circle1->SetPosition(circle1->GetPosition() + contactForce * body1Factor);
-			circle2->SetPosition(circle2->GetPosition() + contactForce * (1 - body1Factor));
+			circle1->SetPosition(circle1->GetPosition() + contactForce * body1Factor); // Apply contact forces
+			circle2->SetPosition(circle2->GetPosition() + contactForce * (1 - body1Factor)); // Apply contact forces
 
 			circle1->ResolveCollision(circle2, 0.5f * (circle1->GetPosition() + circle2->GetPosition()));
 
@@ -306,7 +284,7 @@ bool PhysicsScene::circle2Plane(PhysicsObject* c, PhysicsObject* p)
 		float intersection = circle->GetRadius() - circleToPlane;
 		if (intersection > 0)
 		{
-			circle->SetPosition(circle->GetPosition() + (collisionNormal * (circle->GetRadius() - circleToPlane)) * (circle->IsKinematic() ? 0.0f : 1.0f));
+			circle->SetPosition(circle->GetPosition() + (collisionNormal * (circle->GetRadius() - circleToPlane)) * (circle->IsKinematic() ? 0.0f : 1.0f)); // Apply contact force
 
 			glm::vec2 contact =  circle->GetPosition() + (plane->GetNormal() * -circle->GetRadius());
 			plane->ResolveCollision(circle, contact);
@@ -349,15 +327,15 @@ bool PhysicsScene::OBB2Plane(PhysicsObject* obb, PhysicsObject* p)
 		{
 			for (float y = -box->GetExtents().y; y < box->GetHeight(); y += box->GetHeight())
 			{
-				// get the position of the corner in world space
+				// Get the position of the corner in world space
 				glm::vec2 p = box->GetPosition() + (x * box->GetLocalX()) + (y * box->GetLocalY ());
 
 				float distFromPlane = glm::dot(p - planeOrigin, plane->GetNormal());
-				// this is the total velocity of the point
+				// This is the total velocity of the point
 				float velocityIntoPlane = glm::dot(box->GetVelocity() + box->GetAngularVelocity() * ((-y * box->GetLocalX()) + (x * box->GetLocalY())), plane->GetNormal());
 
-				// if this corner is on the opposite side from the COM,
-				// and moving further in, we need to resolve the collision
+				// If this corner is on the opposite side from the COM,
+				// And moving further in, we need to resolve the collision
 				if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane > 0) || (distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane < 0))
 				{
 					numContacts++;
@@ -380,30 +358,30 @@ bool PhysicsScene::OBB2Plane(PhysicsObject* obb, PhysicsObject* p)
 			
 		}
 
-		// we've had a hit - typically only two corners can contact
+		// We've had a hit - typically only two corners can contact
 		if (numContacts > 0)
 		{
-			// get the average collision velocity into the plane
+			// Get the average collision velocity into the plane
 			// (covers linear and rotational velocity of all corners involved)
 			float collisionV = contactV / (float)numContacts;
 
-			// get the acceleration required to stop (restitution = 0) or reverse
+			// Get the acceleration required to stop (restitution = 0) or reverse
 			// (restitution = 1) the average velocity into the plane
 			glm::vec2 acceleration = -plane->GetNormal() * ((1.0f + box->m_elasticity) * collisionV);
-			// and the average position at which we'll apply the force
+			// And the average position at which we'll apply the force
 			// (corner or edge centre)
 			glm::vec2 localContact = (contact / (float)numContacts) - box->GetPosition();
 
-			// this is the perpendicular distance we apply the force at relative to
-			// the COM, so Torque = F*r
+			// This is the perpendicular distance we apply the force at relative to
+			// The COM, so Torque = F*r
 			float r = glm::dot(localContact, glm::vec2(plane->GetNormal().y, -plane->GetNormal().x));
 
-			// work out the "effective mass" - this is a combination of moment of
-			// inertia and mass, and tells us how much the contact point velocity
-			// will change with the force we're applying
+			// Work out the "effective mass" - this is a combination of moment of
+			// Inertia and mass, and tells us how much the contact point velocity
+			// Will change with the force we're applying
 			float mass0 = 1.0f / (1.0f / box->GetMass() + (r * r) / box->GetMoment());
 
-			// and apply the force
+			// And apply the force
 			box->ApplyForce(acceleration * mass0, localContact);
 
 			box->SetPosition(box->GetPosition() + (plane->GetNormal() * penetration) * (box->IsKinematic() ? 0.0f : 1.0f));
@@ -420,12 +398,12 @@ bool PhysicsScene::OBB2Circle(PhysicsObject* obb, PhysicsObject* c)
 	if (box != nullptr && circle != nullptr)
 	{
 		glm::vec2 circlePos = circle->GetPosition() - box->GetPosition();
-		glm::vec2 contact(0, 0); // contact is in our box coordinates
+		glm::vec2 contact(0, 0); // Contact is in our box coordinates
 
 		float widthExtent = box->GetExtents().x, heightExtent = box->GetExtents().y;
 		int numContacts = 0;
 
-		// check the four corners to see if any of them are inside the circle
+		// Check the four corners to see if any of them are inside the circle
 		for (float x = -widthExtent; x <= widthExtent; x += box->GetWidth())
 		{
 			for (float y = -heightExtent; y <= heightExtent; y += box->GetHeight())
@@ -442,7 +420,7 @@ bool PhysicsScene::OBB2Circle(PhysicsObject* obb, PhysicsObject* c)
 		}
 
 		glm::vec2* direction = nullptr;
-		// get the local position of the circle centre
+		// Get the local position of the circle centre
 		glm::vec2 localPos(glm::dot(box->GetLocalX(), circlePos), glm::dot(box->GetLocalY(), circlePos));
 
 		if (localPos.y < heightExtent && localPos.y > -heightExtent) 
@@ -480,7 +458,7 @@ bool PhysicsScene::OBB2Circle(PhysicsObject* obb, PhysicsObject* c)
 
 		if (numContacts > 0) 
 		{
-			// average, and convert back into world coords
+			// Average, and convert back into world coords
 			contact = box->GetPosition() + (1.0f / numContacts) * (box->GetLocalX() * contact.x + box->GetLocalY() * contact.y);
 
 			box->ResolveCollision(circle, contact, direction);
@@ -488,7 +466,7 @@ bool PhysicsScene::OBB2Circle(PhysicsObject* obb, PhysicsObject* c)
 			float pen = circle->GetRadius() - glm::length(contact - circle->GetPosition());
 			glm::vec2 norm = glm::normalize(circle->GetPosition() - contact);
 
-			PhysicsScene::ApplyContactForces(box, circle, norm, pen);
+			PhysicsScene::ApplyContactForces(box, circle, norm, pen); // Apply contact forces
 
 			box->CollisionDetected(circle);
 			circle->CollisionDetected(box);
@@ -527,7 +505,7 @@ bool PhysicsScene::OBB2OBB(PhysicsObject* obb1, PhysicsObject* obb2)
 			box1->CollisionDetected(box2);
 			box2->CollisionDetected(box1);
 
-			PhysicsScene::ApplyContactForces(box1, box2, norm, pen);
+			PhysicsScene::ApplyContactForces(box1, box2, norm, pen); // Apply contact forces
 		}
 
 		return true;

@@ -89,12 +89,13 @@ void Player::SetMaxForce(float maxForce)
 
 void Player::MakeGizmo()
 {
-	Circle::MakeGizmo();
+	aie::Gizmos::add2DCircle(m_position, m_radius, 12, m_colour, nullptr); // Draw player
+	aie::Gizmos::add2DCircle(m_position + glm::normalize(m_velocity), m_radius / 2, 12, glm::vec4(0, 0, 0, 1), nullptr); // Draw player eye
 
-	aie::Gizmos::add2DAABBFilled(glm::vec2(-20, 50), glm::vec2(15 * ((float)m_currentHealth / (float)m_maxHealth), 2), glm::vec4(1, 0, 0, 1), nullptr);
-	aie::Gizmos::add2DAABBFilled(glm::vec2(20, 50), glm::vec2(15 * ((float)m_currentEnergy / (float)m_maxEnergy), 2), glm::vec4(0, 0, 1, 1), nullptr);
+	aie::Gizmos::add2DAABBFilled(glm::vec2(-20, 50), glm::vec2(15 * ((float)m_currentHealth / (float)m_maxHealth), 2), glm::vec4(1, 0, 0, 1), nullptr); // Display red bar for health
+	aie::Gizmos::add2DAABBFilled(glm::vec2(20, 50), glm::vec2(15 * ((float)m_currentEnergy / (float)m_maxEnergy), 2), glm::vec4(0, 0, 1, 1), nullptr); // Display blue bar for energy
 
-	if (m_mouseDownBegin != nullptr && m_mouseDownEnd != nullptr)
+	if (m_mouseDownBegin != nullptr && m_mouseDownEnd != nullptr) // Draw line for user input
 	{
 		glm::vec2 dir = *m_mouseDownBegin - *m_mouseDownEnd;
 		dir = glm::clamp(dir, -m_maxForce, m_maxForce) / 5.0f;
@@ -105,32 +106,32 @@ void Player::MakeGizmo()
 
 void Player::FixedUpdate(glm::vec2 gravity, float dt)
 {
-	if (m_currentEnergy <= 0.5f)
+	if (m_currentEnergy <= 0.5f) // Put a delay on if the player's energy is too low
 	{
 		m_startDelay = true;
 	}
 
 	if (!m_startDelay)
 	{
-		if (m_playerInput->isMouseButtonDown(0))
+		if (m_playerInput->isMouseButtonDown(0)) // Check if left mouse button is down
 		{
-			if (m_mouseDownBegin == nullptr)
+			if (m_mouseDownBegin == nullptr) // Set the first mouse down position
 			{
 				m_mouseDownBegin = new glm::vec2(m_playerInput->getMouseX(), m_playerInput->getMouseY());
 			}
-			else
+			else // Set the mouse up position
 			{
 				m_mouseDownEnd = new glm::vec2(m_playerInput->getMouseX(), m_playerInput->getMouseY());
 			}
 
-			m_currentEnergy -= m_energyLossPerSecond * dt;
+			m_currentEnergy -= m_energyLossPerSecond * dt; // Decrease player energy
 		}
-		else if (m_playerInput->isMouseButtonUp(0))
+		else if (m_playerInput->isMouseButtonUp(0)) // Set the mouse up position
 		{
 			m_mouseDownEnd = new glm::vec2(m_playerInput->getMouseX(), m_playerInput->getMouseY());
 		}
 	}
-	else
+	else // Update timer
 	{
 		m_currentDelayTimer += dt;
 
@@ -153,7 +154,7 @@ void Player::FixedUpdate(glm::vec2 gravity, float dt)
 			float x = m_mouseDownBegin->x - m_mouseDownEnd->x;
 			float y = m_mouseDownBegin->y - m_mouseDownEnd->y;
 
-			glm::vec2 force = glm::vec2(x, y);
+			glm::vec2 force = glm::vec2(x, y); // Direction of force to be applied 
 			force = glm::clamp(force, -m_maxForce, m_maxForce);
 
 			if (glm::length(force) > 0.01f)
@@ -169,7 +170,7 @@ void Player::FixedUpdate(glm::vec2 gravity, float dt)
 		}
 
 		RigidBody::FixedUpdate(gravity, dt);
-		m_currentEnergy += (m_energyLossPerSecond * dt) / 5; 
+		m_currentEnergy += (m_energyLossPerSecond * dt) / 5; // Increase energy
 	}
 
 	if (m_currentHealth <= 0)
@@ -177,7 +178,7 @@ void Player::FixedUpdate(glm::vec2 gravity, float dt)
 		m_destroyObject = true;
 	}
 
-	m_currentEnergy = glm::clamp(m_currentEnergy, 0.0f, m_maxEnergy);
+	m_currentEnergy = glm::clamp(m_currentEnergy, 0.0f, m_maxEnergy); // Clamp energy
 }
 
 void Player::SafeToRemove()
